@@ -27,4 +27,7 @@ class Task(val start: Option[Int], val end: Option[Int], val timeBounds: TaskWit
 object Task {
   def apply(start: Option[Int], end: Option[Int], taskWithTimeBound: TaskWithTimeBound) =
     new Task(start, end, taskWithTimeBound)
+
+  def apply(taskWithTimeBound: TaskWithTimeBound) =
+    new Task(None, None, taskWithTimeBound)
 }

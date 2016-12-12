@@ -9,7 +9,7 @@ import scala.language.postfixOps
   */
 class RightToLeftPhase(implicit val source: TaskSource) {
   private def endTasks() = {
-    val idsBefore = source.links.map(_.idBefore)
+    val idsBefore = source.links.map(_.idBefore).toSet
     source.tasksWithTimeBound filterNot(idsBefore contains _.id)
   }
 

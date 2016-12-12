@@ -16,7 +16,8 @@ class AdjustPhaseSuite extends FunSuite {
 
     // Action
     val task = Task(Some(5), Some(10), TaskWithTimeBound(TaskPlain(2, 5, TaskType.ASAP), Some(5), Some(12)))
-    val (updated, others) = new AdjustPhase(tasks, links).checkBefore(List(task), tasks)
+    val (updatedMap, others) = new AdjustPhase(tasks, links).checkBefore(Map(task.id -> task), tasks map (t => t.id -> t) toMap)
+    val updated = (updatedMap values).toList
 
     // Assert
     val toTest = updated.sortBy(_.id)

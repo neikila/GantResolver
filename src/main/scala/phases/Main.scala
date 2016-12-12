@@ -18,10 +18,8 @@ object Main {
       l2rResult <- leftToRightFuture
       r2lResult <- rightToLeftFuture
       withBounds <- Future {
-        val last = l2rResult.maxBy(_.endMin.get)
-        val r2lWithOffset = r2lResult map { task =>
-          task.updateEndMax(task.endMax.map { _ + last.endMin.get })
-        }
+        val offset = l2rResult.maxBy(_.endMin.get).endMin.get
+        val r2lWithOffset = r2lResult map (task => task.updateEndMax(task.endMax.map(_ + offset)))
         zip(l2rResult, r2lWithOffset)
       }
       result <- Future { new AdjustPhase(withBounds, taskSource.links).execute() }

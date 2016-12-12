@@ -27,7 +27,7 @@ class TaskSourceSuite extends FunSuite {
     implicit val source = new TaskSourceDebugV1Impl()
     implicit val idToTask = new RightToLeftPhase()
       .rightToLeft(8)
-      .map(task => task.id -> new Task(task)) toMap
+      .map(task => task.id -> Task(task)) toMap
     val sorted = source.sortTasks
 
     // Assert
@@ -47,7 +47,7 @@ class TaskSourceSuite extends FunSuite {
     }
     implicit val idToTask = new RightToLeftPhase()
       .rightToLeft(8)
-      .map(task => task.id -> new Task(task)) toMap
+      .map(task => task.id -> Task(task)) toMap
     val sorted = source.sortTasks map (_.id)
 
     // Assert
