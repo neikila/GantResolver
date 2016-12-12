@@ -4,14 +4,15 @@ import model.{Task, TaskSource, TaskWithTimeBound}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.languageFeature.postfixOps
 
 /**
   * Created by k.neyman on 10.12.2016.
   */
 object Main {
-  def calculate(taskSource: TaskSource): Future[List[Task]] = {
-    val leftToRightFuture = Future { new LeftToRightPhase leftToRight taskSource }
-    val rightToLeftFuture = Future { new RightToLeftPhase rightToLeft(taskSource, 0) }
+  def calculate(implicit taskSource: TaskSource): Future[List[Task]] = {
+    val leftToRightFuture = Future { new LeftToRightPhase leftToRight }
+    val rightToLeftFuture = Future { new RightToLeftPhase rightToLeft 0 }
 
     for {
       l2rResult <- leftToRightFuture

@@ -7,14 +7,14 @@ import scala.language.postfixOps
 /**
   * Created by k.neyman on 10.12.2016.
   */
-class LeftToRightPhase {
-  def startTasks(implicit source: TaskSource) = {
+class LeftToRightPhase(implicit source: TaskSource) {
+  def startTasks = {
     val idsAfter = source.links map(_.idAfter)
     source.tasksWithTimeBound filterNot(idsAfter contains _.id)
   }
 
-  def leftToRight(source: TaskSource): Iterable[TaskWithTimeBound] = {
-    val tasks = startTasks(source) map { _ updateStartMin 0 }
+  def leftToRight: Iterable[TaskWithTimeBound] = {
+    val tasks = startTasks map { _ updateStartMin 0 }
     val all = tasks.foldLeft(source.idToTask) { (map, task) => map + (task.id -> task) }
     leftToRight(tasks)(all, source.links)
   }

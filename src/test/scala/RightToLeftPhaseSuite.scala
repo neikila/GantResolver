@@ -13,7 +13,8 @@ class RightToLeftPhaseSuite extends FunSuite {
   }
 
   test("Race condition") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV1Impl, 8)
+    implicit val source = new TaskSourceDebugV1Impl
+    val result = new RightToLeftPhase rightToLeft 8
     assert(result.toList.find { _.task.id == 1}.get.startMax.get == 0)
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 1)
   }
@@ -24,7 +25,8 @@ class RightToLeftPhaseSuite extends FunSuite {
   }
 
   test("Race condition another order") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV2Impl, 8)
+    implicit val source = new TaskSourceDebugV2Impl
+    val result = new RightToLeftPhase rightToLeft 8
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 0)
     assert(result.toList.find { _.task.id == 1}.get.startMax.get == 1)
   }
@@ -36,7 +38,8 @@ class RightToLeftPhaseSuite extends FunSuite {
   }
 
   test("Different length of branches before.") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV3Impl, 10)
+    implicit val source = new TaskSourceDebugV3Impl
+    val result = new RightToLeftPhase rightToLeft 10
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 0)
     assert(result.toList.find { _.task.id == 2}.get.startMax.get == 1)
   }
@@ -48,7 +51,8 @@ class RightToLeftPhaseSuite extends FunSuite {
   }
 
   test("Different length of branches before. The shortest one is longer.") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV4Impl, 12)
+    implicit val source = new TaskSourceDebugV4Impl
+    val result = new RightToLeftPhase rightToLeft 12
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 2)
     assert(result.toList.find { _.task.id == 2}.get.startMax.get == 0)
   }
@@ -61,13 +65,15 @@ class RightToLeftPhaseSuite extends FunSuite {
   }
 
   test("Updating tail.") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV5Impl, 7)
+    implicit val source = new TaskSourceDebugV5Impl
+    val result = new RightToLeftPhase rightToLeft 7
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 2)
     assert(result.toList.find { _.task.id == 2}.get.startMax.get == 0)
   }
 
   test("Check offset.") {
-    val result = new RightToLeftPhase rightToLeft(new TaskSourceDebugV5Impl, 0) map
+    implicit val source = new TaskSourceDebugV5Impl
+    val result = new RightToLeftPhase() rightToLeft 0 map
       { task => task.updateEndMax(task.endMax.get + 7) }
     assert(result.toList.find { _.task.id == 0}.get.startMax.get == 2)
     assert(result.toList.find { _.task.id == 2}.get.startMax.get == 0)

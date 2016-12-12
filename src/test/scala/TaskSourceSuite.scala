@@ -24,9 +24,9 @@ class TaskSourceSuite extends FunSuite {
 
   test("Sort correct") {
     // Action
-    val source = new TaskSourceDebugV1Impl()
+    implicit val source = new TaskSourceDebugV1Impl()
     implicit val idToTask = new RightToLeftPhase()
-      .rightToLeft(source, 8)
+      .rightToLeft(8)
       .map(task => task.id -> new Task(task)) toMap
     val sorted = source.sortTasks
 
@@ -38,7 +38,7 @@ class TaskSourceSuite extends FunSuite {
 
   test("Sort more complicated") {
     // Action
-    val source = new TaskSource {
+    implicit val source = new TaskSource {
       override val links: List[Link] =
         Link(0, 2) :: Link(1, 2) :: Link(2, 4) :: Link(3, 4) :: Nil
       override val tasks: List[TaskPlain] =
@@ -46,7 +46,7 @@ class TaskSourceSuite extends FunSuite {
         TaskPlain(3, 3) :: TaskPlain(4, 2) :: Nil
     }
     implicit val idToTask = new RightToLeftPhase()
-      .rightToLeft(source, 8)
+      .rightToLeft(8)
       .map(task => task.id -> new Task(task)) toMap
     val sorted = source.sortTasks map (_.id)
 

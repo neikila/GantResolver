@@ -7,14 +7,14 @@ import scala.language.postfixOps
 /**
   * Created by k.neyman on 10.12.2016.
   */
-class RightToLeftPhase {
-  private def endTasks(source: TaskSource) = {
+class RightToLeftPhase(implicit val source: TaskSource) {
+  private def endTasks() = {
     val idsBefore = source.links.map(_.idBefore)
     source.tasksWithTimeBound filterNot(idsBefore contains _.id)
   }
 
-  def rightToLeft(source: TaskSource, deadline: Int): Iterable[TaskWithTimeBound] = {
-    val tasks = endTasks(source) map { _ updateEndMax deadline }
+  def rightToLeft(deadline: Int): Iterable[TaskWithTimeBound] = {
+    val tasks = endTasks map { _ updateEndMax deadline }
     val all = Utils.merge(source.tasksWithTimeBound, tasks)
     rightToLeft(tasks, all, source.links)
   }
