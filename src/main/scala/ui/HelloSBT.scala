@@ -1,7 +1,7 @@
 package ui
 
 import phases.Main
-import model.{Task, TaskSourceImpl}
+import model.{Task, TaskSourceImpl, TaskType}
 
 import scala.collection.immutable.HashMap
 import scala.concurrent.Await
@@ -117,6 +117,17 @@ object HelloSBT extends JFXApp {
         text = s"Task #${task.id}"
         style = "-fx-font-size: 16pt"
         fill = Black
+      },
+      new Text {
+        x = startX + zeroDayPos + task.startMin.get * dayWidth + 2
+        y = startY + taskHeight + offsetY
+        text = task.taskType match {
+          case TaskType.ALAP => "ALAP"
+          case TaskType.ASAP => "ASAP"
+          case _ => ""
+        }
+        style = "-fx-font-size: 7pt"
+        fill = { val c = Black; c.opacity(0.8); c }
       }
     )
   }
