@@ -28,7 +28,7 @@ object Main {
 
   def zip(min: Iterable[TaskWithTimeBound], max: Iterable[TaskWithTimeBound]) = {
     (min.toList.sortBy(_.id) zip max.toList.sortBy(_.id)) map {
-      case(minTask, maxTask) => TaskWithTimeBound(minTask.task, minTask.startMin, maxTask.endMax)
+      case(minTask, maxTask) => TaskWithTimeBound(minTask, minTask.startMin, maxTask.endMax)
     }
   }
 }

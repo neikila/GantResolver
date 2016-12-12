@@ -15,7 +15,7 @@ class LeftToRightPhaseSuite extends FunSuite {
   test("Race condition") {
     implicit val source = new TaskSourceDebugV1Impl
     val result = new LeftToRightPhase leftToRight
-    val last = result.toList.find { _.task.id == 2}
+    val last = result.toList.find { _.id == 2}
     assert(last.get.startMin.get == 3)
   }
 
@@ -27,7 +27,7 @@ class LeftToRightPhaseSuite extends FunSuite {
   test("Race condition another order") {
     implicit val source = new TaskSourceDebugV2Impl
     val result = new LeftToRightPhase leftToRight
-    val last = result.toList.find { _.task.id == 2}
+    val last = result.toList.find { _.id == 2}
     assert(last.get.startMin.get == 3)
   }
 
@@ -39,7 +39,7 @@ class LeftToRightPhaseSuite extends FunSuite {
   test("Different length of branches before.") {
     implicit val source = new TaskSourceDebugV3Impl
     val result = new LeftToRightPhase leftToRight
-    val last = result.toList.find { _.task.id == 3}
+    val last = result.toList.find { _.id == 3}
     assert(last.get.startMin.get == 5)
   }
 
@@ -51,7 +51,7 @@ class LeftToRightPhaseSuite extends FunSuite {
   test("Different length of branches before. The shortest one is longer.") {
     implicit val source = new TaskSourceDebugV4Impl
     val result = new LeftToRightPhase leftToRight
-    val last = result.toList.find { _.task.id == 3}
+    val last = result.toList.find { _.id == 3}
     assert(last.get.startMin.get == 7)
   }
 
@@ -63,7 +63,7 @@ class LeftToRightPhaseSuite extends FunSuite {
   test("Updating tail.") {
     implicit val source = new TaskSourceDebugV5Impl
     val result = new LeftToRightPhase leftToRight
-    val last = result.toList.find { _.task.id == 4}
+    val last = result.toList.find { _.id == 4}
     assert(last.get.startMin.get == 6)
   }
 }

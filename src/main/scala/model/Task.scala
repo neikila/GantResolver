@@ -21,7 +21,7 @@ class Task(val start: Option[Int], val end: Option[Int], val timeBounds: TaskWit
 
   def isCritical = timeBounds.isCritical
 
-  def taskType = timeBounds.task.taskType
+  def taskType = timeBounds.taskType
 }
 
 object Task {
