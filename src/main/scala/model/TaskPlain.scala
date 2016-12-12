@@ -8,7 +8,14 @@ import model.TaskType.TaskType
 
 class TaskPlain(val id: Int,
                 val length: Int,
-                val taskType: TaskType = TaskType.NoMatter)
+                val taskType: TaskType = TaskType.NoMatter) {
+  override def equals(obj: scala.Any): Boolean = {
+    obj match {
+      case t: TaskPlain => t.id == id
+      case _ => false
+    }
+  }
+}
 
 object TaskPlain {
   def apply(id: Int, length: Int, taskType: TaskType = TaskType.NoMatter): TaskPlain =

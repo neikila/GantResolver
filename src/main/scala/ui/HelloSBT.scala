@@ -25,6 +25,8 @@ object HelloSBT extends JFXApp {
   val coveredColor = Green
   val defaultColor = Orange
   val criticalColor = Red
+  val strokeTaskTypeColor = Black
+  strokeTaskTypeColor.opacity(0.8)
 
   val taskHeight = 16
   val offsetY = 8
@@ -127,7 +129,7 @@ object HelloSBT extends JFXApp {
           case _ => ""
         }
         style = "-fx-font-size: 7pt"
-        fill = { val c = Black; c.opacity(0.8); c }
+        fill = strokeTaskTypeColor
       }
     )
   }

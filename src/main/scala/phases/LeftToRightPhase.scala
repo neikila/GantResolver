@@ -9,31 +9,31 @@ import scala.language.postfixOps
   */
 class LeftToRightPhase {
   def startTasks(implicit source: TaskSource) = {
-    val idsAfter = source.links.map(_.idAfter)
-    source.tasksWithTimeBound.filterNot(task => idsAfter.contains(task.id))
+    val idsAfter = source.links map(_.idAfter)
+    source.tasksWithTimeBound filterNot(idsAfter contains _.id)
   }
 
   def leftToRight(source: TaskSource): Iterable[TaskWithTimeBound] = {
-    val tasks = startTasks(source) map { _.updateStartMin(0) }
-    val all = Utils.merge(source.tasksWithTimeBound, tasks)
-    leftToRight(tasks, all, source.links)
+    val tasks = startTasks(source) map { _ updateStartMin 0 }
+    val all = tasks.foldLeft(source.idToTask) { (map, task) => map + (task.id -> task) }
+    leftToRight(tasks)(all, source.links)
   }
 
-  def leftToRight(init: Iterable[TaskWithTimeBound],
-                  all: Iterable[TaskWithTimeBound],
-                  links: Iterable[Link]): Iterable[TaskWithTimeBound] = {
-    val updated = init flatMap
-      { nextTo(all, links)(_) } groupBy
-      { _.task.id } map
-      { case(id, tasks) => tasks.maxBy(_.startMin.get) }
-    if (updated isEmpty) all
-    else leftToRight(updated, Utils.merge(all, updated), links)
+  def leftToRight(init: Seq[TaskWithTimeBound])(
+                  implicit all: Map[Int, TaskWithTimeBound], links: Seq[Link]): Seq[TaskWithTimeBound] = {
+    val updated = init flatMap { nextTo } groupBy { _.id } map
+      { case(_, tasks) => tasks.maxBy(_.startMin.get) } toSeq
+
+    if (updated isEmpty) all.values toSeq
+    else leftToRight(updated)(updated.foldLeft(all) {(map, task) => map + (task.id -> task)}, links)
   }
 
-  def nextTo(allTasks: Iterable[TaskWithTimeBound], links: Iterable[Link])(task: TaskWithTimeBound): Iterable[TaskWithTimeBound] = {
-    links filter { _.idBefore == task.task.id } map
-      { link => allTasks.find(_.task.id == link.idAfter).get } filter
-      { _.startMin.forall(_ < task.endMin.get) } map
-      { _.updateStartMin(task.endMin) }
+  def nextTo(task: TaskWithTimeBound)(implicit allTasks: Map[Int, TaskWithTimeBound],  links: Iterable[Link]): Iterable[TaskWithTimeBound] = {
+    for {
+      link <- links
+      if link.idBefore == task.id
+      taskAfter <- allTasks get link.idAfter
+      if taskAfter.startMin.forall(_ < task.endMin.get)
+    } yield taskAfter.updateStartMin(task.endMin)
   }
 }

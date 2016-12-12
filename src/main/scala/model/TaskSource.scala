@@ -8,6 +8,7 @@ import scala.language.postfixOps
 trait TaskSource {
   val tasks: List[TaskPlain]
   lazy val tasksWithTimeBound: List[TaskWithTimeBound] = tasks map (new TaskWithTimeBound(_))
+  lazy val idToTask = tasksWithTimeBound map(task => task.id -> task) toMap
   val links: List[Link]
 
   lazy val last = {

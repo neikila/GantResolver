@@ -27,4 +27,7 @@ class TaskWithTimeBound(val task: TaskPlain,
 object TaskWithTimeBound {
   def apply(task: TaskPlain, startMin: Option[Int], endMax: Option[Int]): TaskWithTimeBound =
     new TaskWithTimeBound(task, startMin, endMax)
+
+  def apply(task: TaskPlain): TaskWithTimeBound =
+    new TaskWithTimeBound(task)
 }
